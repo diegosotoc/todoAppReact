@@ -1,11 +1,12 @@
 // import logo from './logo.svg';
 // import './App.css';
 import React from "react";
-import {TodoCounter} from './TodoCounter.js'
-import {TodoSearch} from './TodoSearch.js'
-import {TodoList} from './TodoList.js'
-import {TodoButton} from './TodoButton.js'
-import {TodoItem} from './TodoItem.js'
+import { AppUi } from "./AppUI";
+// import {TodoCounter} from '../TodoCounter/index.js'
+// import {TodoSearch} from '../TodoSearch/index.js'
+// import {TodoList} from '../TodoList/index.js'
+// import {TodoButton} from '../TodoButton/index.js'
+// import {TodoItem} from '../TodoItem/index.js'
 
 
 const defaultTodos = [
@@ -61,42 +62,16 @@ function App() {
   };
 
 
-
-
-
-
-
   return (
-
-    <React.Fragment>
-
-      <TodoCounter
-        total = {totalTodos}
-        completed = {completedTodos}
-      />
-
-      <TodoSearch
-        searchValue={searchValue}
-        setSearchValue={setSearchValue}
-      />
-
-      <TodoList>
-        {searchedTodos.map(todo =>(
-          // key = identificador de text, opción de react...
-          <TodoItem 
-            key={todo.text} 
-            text={todo.text}
-            completed={todo.completed}
-            onComplete = {()=> completeTodo(todo.text)}
-            onDelete = {()=> deleteTodo(todo.text)}
-          />
-        ))}
-      </TodoList>
-
-      <TodoButton/>
-
-    </React.Fragment>
-
+    <AppUi
+      totalTodos = {totalTodos}
+      completedTodos = {completedTodos}
+      searchValue={searchValue}
+      setSearchValue={setSearchValue}
+      searchedTodos={searchedTodos}
+      completeTodo = {completeTodo}
+      deleteTodo = {deleteTodo}
+    />
   );
 }
 
