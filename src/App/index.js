@@ -8,69 +8,76 @@ import { AppUi } from "./AppUI";
 // import {TodoButton} from '../TodoButton/index.js'
 // import {TodoItem} from '../TodoItem/index.js'
 
-
 const defaultTodos = [
-  {text: 'Learn React', completed: true},
-  {text: 'Drink water', completed: true},
-  {text: 'Cry', completed: false}
+  { text: "Learn React", completed: true },
+  { text: "Drink water", completed: true },
+  { text: "Cry", completed: false },
 ];
 
 function App() {
-  // Estado inicial de nuestros TODOs
-  const [todos, setTodos] = React.useState(defaultTodos);
-  const [searchValue, setSearchValue] = React.useState('');
-    
-  // Cantidad de TODOs completados
-  const completedTodos = todos.filter(todo => !!todo.completed).length;
-  // Cantidad total de TODOs
-  const totalTodos = todos.length;
+  const localStorageTodos = localStorage.getItem("TODOS_V1");
+  let parsedTodos;
 
+  if (!localStorageTodos) {
+    localStorage.setItem("TODOS_V1", JSON.stringify([]));
+    parsedTodos = [];
+  } else {
+    parsedTodos = JSON.parse(localStorageTodos);
+  }
+
+  const [todos, setTodos] = React.useState(parsedTodos);
+  const [searchValue, setSearchValue] = React.useState("");
+
+  const completedTodos = todos.filter((todo) => !!todo.completed).length;
+  const totalTodos = todos.length;
 
   let searchedTodos = [];
 
-  // Lógica para filtrar
   if (!searchValue.length >= 1) {
     searchedTodos = todos;
   } else {
-    searchedTodos = todos.filter(todo => {
+    searchedTodos = todos.filter((todo) => {
       const todoText = todo.text.toLowerCase();
       const searchText = searchValue.toLowerCase();
       return todoText.includes(searchText);
     });
   }
 
-// Cada vez que recibe un texto
-// va a buscar en cada uno de la lista de todos cuales 
-// todos cumoplen con esta condicion
-  const completeTodo = (text)=> {
+  // Creamos la función en la que actualizaremos nuestro localStorage
+  const saveTodos = (newTodos) => {
+    // Convertimos a string nuestros TODOs
+    const stringifiedTodos = JSON.stringify(newTodos);
+    // Los guardamos en el localStorage
+    localStorage.setItem("TODOS_V1", stringifiedTodos);
+    // Actualizamos nuestro estado
+    setTodos(newTodos);
+  };
 
-    const todoIndex = todos.findIndex(todo => todo.text === text);
-    // nueva lista de todos...
+  const completeTodo = (text) => {
+    const todoIndex = todos.findIndex((todo) => todo.text === text);
     const newTodos = [...todos];
-    // pero el que cumple con la completed como true
     newTodos[todoIndex].completed = true;
-    // se renderiza de nuevo la app
-    setTodos(newTodos);
+    // Cada que el usuario interactúe con nuestra aplicación se guardarán los TODOs con nuestra nueva función
+    saveTodos(newTodos);
   };
 
-  const deleteTodo = (text)=> {
-    const todoIndex = todos.findIndex(todo => todo.text === text);
+  const deleteTodo = (text) => {
+    const todoIndex = todos.findIndex((todo) => todo.text === text);
     const newTodos = [...todos];
-
     newTodos.splice(todoIndex, 1);
-    setTodos(newTodos);
+    // Cada que el usuario interactúe con nuestra aplicación se guardarán los TODOs con nuestra nueva función
+    saveTodos(newTodos);
   };
-
 
   return (
     <AppUi
-      totalTodos = {totalTodos}
-      completedTodos = {completedTodos}
+      totalTodos={totalTodos}
+      completedTodos={completedTodos}
       searchValue={searchValue}
       setSearchValue={setSearchValue}
       searchedTodos={searchedTodos}
-      completeTodo = {completeTodo}
-      deleteTodo = {deleteTodo}
+      completeTodo={completeTodo}
+      deleteTodo={deleteTodo}
     />
   );
 }
