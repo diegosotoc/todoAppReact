@@ -8,24 +8,41 @@ import { AppUi } from "./AppUI";
 // import {TodoButton} from '../TodoButton/index.js'
 // import {TodoItem} from '../TodoItem/index.js'
 
-const defaultTodos = [
-  { text: "Learn React", completed: true },
-  { text: "Drink water", completed: true },
-  { text: "Cry", completed: false },
-];
+// const defaultTodos = [
+//   { text: "Learn React", completed: true },
+//   { text: "Drink water", completed: true },
+//   { text: "Cry", completed: false },
+// ];
 
-function App() {
-  const localStorageTodos = localStorage.getItem("TODOS_V1");
-  let parsedTodos;
+function useLocalStorage(itemName, initualValue) {
+  const localStorageItem = localStorage.getItem("itemName");
+  let parsedItem;
 
-  if (!localStorageTodos) {
-    localStorage.setItem("TODOS_V1", JSON.stringify([]));
-    parsedTodos = [];
+  if (!localStorageItem) {
+    localStorage.setItem("itemName", JSON.stringify(initualValue));
+    parsedItem = [];
   } else {
-    parsedTodos = JSON.parse(localStorageTodos);
+    parsedItem = JSON.parse(localStorageItem);
   }
 
-  const [todos, setTodos] = React.useState(parsedTodos);
+  const [item, setItem] = React.useState(parsedItem);
+
+  // Creamos la función en la que actualizaremos nuestro localStorage
+  const saveItem = (newItem) => {
+    // Convertimos a string nuestros Item
+    const stringifiedItem = JSON.stringify(newItem);
+    // Los guardamos en el localStorage
+    localStorage.setItem("itemName", stringifiedItem);
+    // Actualizamos nuestro estado
+    setItem(newItem);
+  };
+
+  return [item, saveItem];
+}
+
+function App() {
+  const [todos, saveTodos] = useLocalStorage("TODOS_V1", []); //llamar al hook
+
   const [searchValue, setSearchValue] = React.useState("");
 
   const completedTodos = todos.filter((todo) => !!todo.completed).length;
@@ -42,16 +59,6 @@ function App() {
       return todoText.includes(searchText);
     });
   }
-
-  // Creamos la función en la que actualizaremos nuestro localStorage
-  const saveTodos = (newTodos) => {
-    // Convertimos a string nuestros TODOs
-    const stringifiedTodos = JSON.stringify(newTodos);
-    // Los guardamos en el localStorage
-    localStorage.setItem("TODOS_V1", stringifiedTodos);
-    // Actualizamos nuestro estado
-    setTodos(newTodos);
-  };
 
   const completeTodo = (text) => {
     const todoIndex = todos.findIndex((todo) => todo.text === text);
