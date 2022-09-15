@@ -15,33 +15,55 @@ import { AppUi } from "./AppUI";
 // ];
 
 function useLocalStorage(itemName, initualValue) {
-  const localStorageItem = localStorage.getItem("itemName");
-  let parsedItem;
+  const [loading, setLoading] = React.useState(true);
+  const [error, setError] = React.useState(false);
 
-  if (!localStorageItem) {
-    localStorage.setItem("itemName", JSON.stringify(initualValue));
-    parsedItem = [];
-  } else {
-    parsedItem = JSON.parse(localStorageItem);
+  const [item, setItem] = React.useState(initualValue);
+
+  try {
+    React.useEffect(() => {
+      setTimeout(() => {
+        const localStorageItem = localStorage.getItem("itemName");
+        let parsedItem;
+
+        if (!localStorageItem) {
+          localStorage.setItem("itemName", JSON.stringify(initualValue));
+          parsedItem = [];
+        } else {
+          parsedItem = JSON.parse(localStorageItem);
+        }
+        setItem(parsedItem);
+        setLoading(false);
+      }, 1000);
+    });
+  } catch (error) {
+    setError(error);
   }
-
-  const [item, setItem] = React.useState(parsedItem);
 
   // Creamos la función en la que actualizaremos nuestro localStorage
   const saveItem = (newItem) => {
-    // Convertimos a string nuestros Item
-    const stringifiedItem = JSON.stringify(newItem);
-    // Los guardamos en el localStorage
-    localStorage.setItem("itemName", stringifiedItem);
-    // Actualizamos nuestro estado
-    setItem(newItem);
+    try {
+      // Convertimos a string nuestros Item
+      const stringifiedItem = JSON.stringify(newItem);
+      // Los guardamos en el localStorage
+      localStorage.setItem("itemName", stringifiedItem);
+      // Actualizamos nuestro estado
+      setItem(newItem);
+    } catch (error) {
+      setError(error);
+    }
   };
 
-  return [item, saveItem];
+  return { item, saveItem, loading, error };
 }
 
 function App() {
-  const [todos, saveTodos] = useLocalStorage("TODOS_V1", []); //llamar al hook
+  const {
+    item: todos,
+    saveItem: saveTodos,
+    loading,
+    error,
+  } = useLocalStorage("TODOS_V1", []); //llamar al hook
 
   const [searchValue, setSearchValue] = React.useState("");
 
@@ -78,6 +100,8 @@ function App() {
 
   return (
     <AppUi
+      loading={loading}
+      error={error}
       totalTodos={totalTodos}
       completedTodos={completedTodos}
       searchValue={searchValue}
