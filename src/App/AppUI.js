@@ -1,36 +1,35 @@
 import React from "react";
-import { TodoCounter } from "../TodoCounter/index.js";
-import { TodoSearch } from "../TodoSearch/index.js";
-import { TodoList } from "../TodoList/index.js";
-import { TodoButton } from "../TodoButton/index.js";
-import { TodoItem } from "../TodoItem/index.js";
+import { TodoContext } from "../TodoContext";
+import { TodoCounter } from "../TodoCounter";
+import { TodoSearch } from "../TodoSearch";
+import { TodoList } from "../TodoList";
+import { TodoItem } from "../TodoItem";
+import { CreateTodoButton } from "../CreateTodoButton";
+import { Modal } from "../Modal";
+import { TodoForm } from "../TodoForm";
 
-function AppUi({
-  loading,
-  error,
-  totalTodos,
-  completedTodos,
-  searchValue,
-  setSearchValue,
-  searchedTodos,
-  completeTodo,
-  deleteTodo,
-}) {
+function AppUI() {
+  const {
+    error,
+    loading,
+    searchedTodos,
+    completeTodo,
+    deleteTodo,
+    openModal,
+    setOpenModal,
+  } = React.useContext(TodoContext);
+
   return (
     <React.Fragment>
-      <TodoCounter total={totalTodos} completed={completedTodos} />
-
-      <TodoSearch searchValue={searchValue} setSearchValue={setSearchValue} />
+      <TodoCounter />
+      <TodoSearch />
 
       <TodoList>
-        {error && <p>OPS! Looks like you found a bug</p>}
-        {loading && <p>Bear with me, loading...</p>}
-        {!loading && !searchedTodos.length && (
-          <p>LET'S CREATE YOUR FIRST TODO</p>
-        )}
+        {error && <p>Desespérate, hubo un error...</p>}
+        {loading && <p>Estamos cargando, no desesperes...</p>}
+        {!loading && !searchedTodos.length && <p>¡Crea tu primer TODO!</p>}
 
         {searchedTodos.map((todo) => (
-          // key = identificador de text, opción de react...
           <TodoItem
             key={todo.text}
             text={todo.text}
@@ -41,9 +40,15 @@ function AppUi({
         ))}
       </TodoList>
 
-      <TodoButton />
+      {!!openModal && (
+        <Modal>
+          <TodoForm />
+        </Modal>
+      )}
+
+      <CreateTodoButton setOpenModal={setOpenModal} />
     </React.Fragment>
   );
 }
 
-export { AppUi };
+export { AppUI };
