@@ -16,7 +16,8 @@
 }
 
 .TodoItem:hover {
-  opacity: 80%;
+  opacity: 90%;
+  outline: white;
 }
 
 .TodoItem-p {
