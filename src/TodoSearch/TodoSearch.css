@@ -1,17 +1,26 @@
-.TodoSearch{
+.todoSearch-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+
+}
+
+.TodoSearch {
 
   background: #F7F7F7;
   border-radius: 12px;
-  border-color: green ;
 
   height: 64px;
-  width: calc(100% - 62px);
-  
+  width: calc(100% - 900px);
+
+
+
+
   text-align: center;
   font-weight: 400;
 
   border: none;
-  margin: 0 24px;
   font-size: 24px;
   text-align: center;
   font-family: 'Quicksand';
@@ -24,7 +33,7 @@
   font-family: 'Quicksand';
   font-weight: 400;
 }
+
 .TodoSearch:focus {
   outline: 2px solid #7f39fb;
-
 }

@@ -1,26 +1,30 @@
 .TodoItem {
-  background-color: #7f39fb;
-  position: relative;
   display: flex;
+  position: relative;
   justify-content: center;
   align-items: center;
-  margin-top: 24px;
+
+  background-color: #7f39fb;
   border-radius: 12px;
   font-size: 24px;
   font-family: Quicksand;
+  margin-top: 30px;
+
+  width: calc(100% - 900px);
 }
+
 .TodoItem:hover {
   opacity: 80%;
 }
 
 .TodoItem-p {
-  margin: 24px 0 24px 24px;
   width: calc(100% - 120px);
 
   font-weight: 600;
   font-size: 20px;
   font-family: Quicksand;
 }
+
 .TodoItem-p--complete {
   text-decoration: line-through;
 }
@@ -40,6 +44,7 @@
   position: absolute;
   left: 12px;
 }
+
 .Icon-check--active {
   color: #03DAC6;
 }
@@ -49,6 +54,16 @@
   top: -24px;
   right: 0;
 }
+
 .Icon-delete:hover {
   color: red;
+}
+
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
 }
